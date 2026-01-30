@@ -140,12 +140,16 @@ function initSound() {
         src: ['assets/sounds/footsteps.mp3'],
         loop: true,
         volume: 0,
-        html5: false,
+        html5: true,
+        preload: true,
         onload: function() {
             console.log('✅ 音声ファイル読み込み成功');
         },
         onloaderror: function(id, error) {
             console.error('❌ 音声ファイル読み込みエラー:', error);
+        },
+        onplayerror: function(id, error) {
+            console.error('❌ 再生エラー:', error);
         }
     });
 
@@ -415,11 +419,17 @@ function initUI() {
         console.log('🔊 音量MAXでテスト再生');
         if (!footstepSound) initSound();
 
-        // 強制再生
-        footstepSound.stop();
-        footstepSound.volume(1.0);
-        footstepSound.play();
-        footstepSound.playing = true;
+        // 一度停止してから再生
+        if (footstepSound.playing()) {
+            footstepSound.stop();
+        }
+
+        setTimeout(() => {
+            footstepSound.volume(1.0);
+            footstepSound.play();
+            footstepSound.playing = true;
+            console.log('▶️ 再生開始');
+        }, 100);
 
         setTimeout(() => {
             console.log('⏸️ テスト終了');
@@ -432,11 +442,17 @@ function initUI() {
         console.log('🔉 音量50%でテスト再生');
         if (!footstepSound) initSound();
 
-        // 強制再生
-        footstepSound.stop();
-        footstepSound.volume(0.5);
-        footstepSound.play();
-        footstepSound.playing = true;
+        // 一度停止してから再生
+        if (footstepSound.playing()) {
+            footstepSound.stop();
+        }
+
+        setTimeout(() => {
+            footstepSound.volume(0.5);
+            footstepSound.play();
+            footstepSound.playing = true;
+            console.log('▶️ 再生開始');
+        }, 100);
 
         setTimeout(() => {
             console.log('⏸️ テスト終了');
