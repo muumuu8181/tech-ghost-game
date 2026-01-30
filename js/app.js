@@ -142,8 +142,9 @@ function initSound() {
         src: ['assets/sounds/footsteps.mp3'],
         loop: true,
         volume: 0,
-        html5: true,
+        html5: false,
         preload: true,
+        pool: 5,
         onload: function() {
             console.log('✅ 音声ファイル読み込み成功');
         },
@@ -152,6 +153,13 @@ function initSound() {
         },
         onplayerror: function(id, error) {
             console.error('❌ 再生エラー:', error);
+            // エラーが出たら一度フェードアウトして再試行
+            const self = this;
+            setTimeout(() => {
+                self.once('unlock', function() {
+                    self.play();
+                });
+            }, 1000);
         }
     });
 
@@ -424,17 +432,17 @@ function initUI() {
         console.log('🔊 音量MAXでテスト再生');
         if (!footstepSound) initSound();
 
-        // 一度停止してから再生
-        if (footstepSound.playing()) {
-            footstepSound.stop();
-        }
+        // まず停止
+        footstepSound.stop();
+        footstepSound.playing = false;
 
+        // 少し待ってから再生（Web Audio APIの準備時間）
         setTimeout(() => {
             footstepSound.volume(1.0);
-            footstepSound.play();
+            const soundId = footstepSound.play();
             footstepSound.playing = true;
-            console.log('▶️ 再生開始');
-        }, 100);
+            console.log('▶️ 再生開始 ID:', soundId);
+        }, 200);
 
         setTimeout(() => {
             console.log('⏸️ テスト終了');
@@ -447,17 +455,17 @@ function initUI() {
         console.log('🔉 音量50%でテスト再生');
         if (!footstepSound) initSound();
 
-        // 一度停止してから再生
-        if (footstepSound.playing()) {
-            footstepSound.stop();
-        }
+        // まず停止
+        footstepSound.stop();
+        footstepSound.playing = false;
 
+        // 少し待ってから再生（Web Audio APIの準備時間）
         setTimeout(() => {
             footstepSound.volume(0.5);
-            footstepSound.play();
+            const soundId = footstepSound.play();
             footstepSound.playing = true;
-            console.log('▶️ 再生開始');
-        }, 100);
+            console.log('▶️ 再生開始 ID:', soundId);
+        }, 200);
 
         setTimeout(() => {
             console.log('⏸️ テスト終了');
