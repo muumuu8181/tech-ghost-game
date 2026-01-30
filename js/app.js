@@ -1,7 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
     // バージョン（更新するたびに0.01ずつ増やす）
-    version: 0.13,
+    version: 0.14,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -384,33 +384,19 @@ function initUI() {
             soundToggle.textContent = '🔇 音声OFF';
             soundToggle.classList.add('active');
 
-            // iOSのAudioContextを有効化
-            if (Howler.usingWebAudio && Howler.Howler.ctx && Howler.Howler.ctx.state === 'suspended') {
-                Howler.Howler.ctx.resume().then(() => {
-                    console.log('✅ AudioContext resumed, now playing sound');
+            console.log('Howler.Howler.ctx exists:', !!Howler.Howler.ctx);
+            console.log('Howler usingWebAudio:', Howler.usingWebAudio);
 
-                    // AudioContextがresumeしてから音声を初期化
-                    if (!footstepSound) initSound();
+            // 音声を初期化
+            if (!footstepSound) initSound();
 
-                    // 少し遅延を入れて確実に準備完了を待つ
-                    setTimeout(() => {
-                        if (state.distance !== null) {
-                            const volume = calculateVolume(state.distance);
-                            playFootsteps(volume);
-                        }
-                    }, 100);
-                }).catch(err => {
-                    console.error('❌ AudioContext resume failed:', err);
-                });
-            } else {
-                // すでにrunningの場合は即座に再生
-                if (!footstepSound) initSound();
-
+            // 直接再生を試みる（Howler.jsが自動的にAudioContextを初期化）
+            setTimeout(() => {
                 if (state.distance !== null) {
                     const volume = calculateVolume(state.distance);
                     playFootsteps(volume);
                 }
-            }
+            }, 100);
         } else {
             soundToggle.textContent = '🔊 音声ON';
             soundToggle.classList.remove('active');
@@ -466,6 +452,7 @@ function initUI() {
 
     testSoundMax.addEventListener('click', () => {
         console.log('🔊 音量MAXでテスト再生');
+        console.log('Howler.Howler.ctx exists:', !!Howler.Howler.ctx);
 
         if (!footstepSound) initSound();
 
@@ -473,8 +460,9 @@ function initUI() {
         footstepSound.stop();
         footstepSound.playing = false;
 
-        // iOSのAudioContextを有効化してから再生
+        // 直接再生を試みる（Howler.jsが自動的にAudioContextを初期化）
         const playTestSound = () => {
+            console.log('Attempting to play...');
             footstepSound.volume(1.0);
             const soundId = footstepSound.play();
             footstepSound.playing = true;
@@ -487,21 +475,13 @@ function initUI() {
             }, 3000);
         };
 
-        // AudioContextがsuspendedならresumeしてから再生
-        if (Howler.usingWebAudio && Howler.Howler.ctx && Howler.Howler.ctx.state === 'suspended') {
-            Howler.Howler.ctx.resume().then(() => {
-                console.log('✅ AudioContext resumed, playing test sound');
-                setTimeout(playTestSound, 100);
-            }).catch(err => {
-                console.error('❌ AudioContext resume failed:', err);
-            });
-        } else {
-            setTimeout(playTestSound, 200);
-        }
+        // 少し遅延してから再生（Howler.jsの初期化待ち）
+        setTimeout(playTestSound, 100);
     });
 
     testSound50.addEventListener('click', () => {
         console.log('🔉 音量50%でテスト再生');
+        console.log('Howler.Howler.ctx exists:', !!Howler.Howler.ctx);
 
         if (!footstepSound) initSound();
 
@@ -509,8 +489,9 @@ function initUI() {
         footstepSound.stop();
         footstepSound.playing = false;
 
-        // iOSのAudioContextを有効化してから再生
+        // 直接再生を試みる（Howler.jsが自動的にAudioContextを初期化）
         const playTestSound = () => {
+            console.log('Attempting to play...');
             footstepSound.volume(0.5);
             const soundId = footstepSound.play();
             footstepSound.playing = true;
@@ -523,17 +504,8 @@ function initUI() {
             }, 3000);
         };
 
-        // AudioContextがsuspendedならresumeしてから再生
-        if (Howler.usingWebAudio && Howler.Howler.ctx && Howler.Howler.ctx.state === 'suspended') {
-            Howler.Howler.ctx.resume().then(() => {
-                console.log('✅ AudioContext resumed, playing test sound');
-                setTimeout(playTestSound, 100);
-            }).catch(err => {
-                console.error('❌ AudioContext resume failed:', err);
-            });
-        } else {
-            setTimeout(playTestSound, 200);
-        }
+        // 少し遅延してから再生（Howler.jsの初期化待ち）
+        setTimeout(playTestSound, 100);
     });
 
     // オシレーターテスト（純粋なWeb Audio APIテスト）
