@@ -1,7 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
     // バージョン（更新するたびに0.01ずつ増やす）
-    version: 0.10,
+    version: 0.11,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -153,18 +153,23 @@ function initSound() {
         },
         onplayerror: function(id, error) {
             console.error('❌ 再生エラー:', error);
-            // エラーが出たら一度フェードアウトして再試行
-            const self = this;
-            setTimeout(() => {
-                self.once('unlock', function() {
-                    self.play();
-                });
-            }, 1000);
         }
     });
 
     footstepSound.playing = false;
     console.log('🔊 音声システム初期化完了');
+}
+
+// iOSでAudioContextを有効化する関数
+function unlockAudio() {
+    if (Howler.usingWebAudio) {
+        const Howl = Howler.Howler;
+        if (Howl.ctx && Howl.ctx.state === 'suspended') {
+            Howl.ctx.resume().then(() => {
+                console.log('✅ AudioContext resumed');
+            });
+        }
+    }
 }
 
 function playFootsteps(volume) {
@@ -368,6 +373,9 @@ function initUI() {
             soundToggle.textContent = '🔇 音声OFF';
             soundToggle.classList.add('active');
 
+            // iOSのAudioContextを有効化
+            unlockAudio();
+
             // 音声コンテキストを開始（ユーザー操作が必要）
             if (!footstepSound) initSound();
 
@@ -430,6 +438,10 @@ function initUI() {
 
     testSoundMax.addEventListener('click', () => {
         console.log('🔊 音量MAXでテスト再生');
+
+        // iOSのAudioContextを有効化
+        unlockAudio();
+
         if (!footstepSound) initSound();
 
         // まず停止
@@ -453,6 +465,10 @@ function initUI() {
 
     testSound50.addEventListener('click', () => {
         console.log('🔉 音量50%でテスト再生');
+
+        // iOSのAudioContextを有効化
+        unlockAudio();
+
         if (!footstepSound) initSound();
 
         // まず停止
