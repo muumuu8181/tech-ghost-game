@@ -156,9 +156,9 @@ header h1 {
 #soundToggle {
     width: 100%;
     padding: 12px;
-    background: #001100;
-    border: 1px solid #0f0;
-    color: #0f0;
+    background: #333;
+    border: 1px solid #666;
+    color: #ccc;
     font-size: 16px;
     cursor: pointer;
 }
@@ -166,6 +166,7 @@ header h1 {
 #soundToggle.active {
     background: #0f0;
     color: #000;
+    border: 1px solid #0f0;
 }
 
 .version-display {
