@@ -1,7 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
     // バージョン（更新するたびに0.01ずつ増やす）
-    version: 0.12,
+    version: 0.13,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -144,9 +144,11 @@ function initSound() {
         volume: 0,
         html5: false,
         preload: true,
-        pool: 1, // iOS向けにプールサイズを1に減らす
+        pool: 5, // iOS向け最適化（v0.13: 動作していた設定に戻す）
         onload: function() {
             console.log('✅ 音声ファイル読み込み成功');
+            console.log('Howler state:', this.state());
+            console.log('AudioContext state:', Howler.Howler.ctx ? Howler.Howler.ctx.state : 'no context');
         },
         onloaderror: function(id, error) {
             console.error('❌ 音声ファイル読み込みエラー:', error);
@@ -158,6 +160,7 @@ function initSound() {
 
     footstepSound.playing = false;
     console.log('🔊 音声システム初期化完了');
+    console.log('Howler usingWebAudio:', Howler.usingWebAudio);
 }
 
 // iOSでAudioContextを有効化する関数（強化版）
@@ -530,6 +533,53 @@ function initUI() {
             });
         } else {
             setTimeout(playTestSound, 200);
+        }
+    });
+
+    // オシレーターテスト（純粋なWeb Audio APIテスト）
+    const testOscillator = document.getElementById('testOscillator');
+    testOscillator.addEventListener('click', () => {
+        console.log('🎵 オシレーターテスト開始（純粋なWeb Audio API）');
+
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+
+            console.log('AudioContext state before resume:', ctx.state);
+
+            const playOscillator = () => {
+                console.log('AudioContext state after resume:', ctx.state);
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+
+                console.log('▶️ オシレーター再生開始（0.5秒）');
+
+                setTimeout(() => {
+                    osc.stop(ctx.currentTime + 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                    console.log('⏸️ オシレーターテスト終了');
+                }, 500);
+            };
+
+            if (ctx.state === 'suspended') {
+                ctx.resume().then(() => {
+                    console.log('✅ AudioContext resumed');
+                    playOscillator();
+                }).catch(err => {
+                    console.error('❌ AudioContext resume failed:', err);
+                });
+            } else {
+                playOscillator();
+            }
+        } catch (err) {
+            console.error('❌ オシレーターテストエラー:', err);
         }
     });
 }
