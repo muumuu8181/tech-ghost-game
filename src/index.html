@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>テック肝試し - レーダー</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>👻 テック肝試し</h1>
+            <div id="status">読み込み中...</div>
+        </header>
+
+        <main>
+            <div class="mode-selector">
+                <button id="mapModeBtn" class="mode-btn active">地図モード</button>
+                <button id="radarModeBtn" class="mode-btn">レーダーモード</button>
+            </div>
+
+            <div id="mapContainer" class="view active">
+                <div id="map"></div>
+            </div>
+
+            <div id="radarContainer" class="view">
+                <canvas id="radarCanvas"></canvas>
+                <div class="radar-overlay">
+                    <div id="distanceInfo">距離: -- m</div>
+                    <div id="directionInfo">方角: --</div>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-item">
+                    <span class="label">あなたの位置</span>
+                    <span id="playerPos">取得中...</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">化け物の位置</span>
+                    <span id="monsterPos">--</span>
+                </div>
+                <div class="info-item danger">
+                    <span class="label">距離</span>
+                    <span id="distance">-- m</span>
+                </div>
+            </div>
+
+            <div class="sound-control">
+                <button id="soundToggle">🔊 音声ON</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
