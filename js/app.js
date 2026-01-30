@@ -1,7 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
     // バージョン（更新するたびに0.01ずつ増やす）
-    version: 0.15,
+    version: 0.16,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -69,6 +69,13 @@ function resizeCanvas() {
 function drawRadar() {
     const width = radarCanvas.width;
     const height = radarCanvas.height;
+
+    // Canvasのサイズが0の場合は描画をスキップ（初期化時）
+    if (width <= 0 || height <= 0) {
+        requestAnimationFrame(drawRadar);
+        return;
+    }
+
     const centerX = width / 2;
     const centerY = height / 2;
     const maxRadius = Math.min(width, height) / 2 - 20;
