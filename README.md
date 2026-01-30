@@ -1,5 +1,8 @@
 # テック肝試し - レーダープロトタイプ
 
+**現在のバージョン**: v0.17
+**デプロイ先**: https://muumuu8181.github.io/tech-ghost-game/
+
 ## 概要
 
 「テクノロジー×肝試し」の単体版プロトタイプです。
@@ -64,3 +67,21 @@ const CONFIG = {
 - 運営管理画面
 - 役割分担機能
 - QRコードチェックポイント
+
+## ドキュメント
+
+詳細な開発経緯やトラブルシューティングは [`docs/`](./docs/) フォルダを参照してください。
+
+- [04_project_status.md](./docs/04_project_status.md) - **プロジェクト現状報告書**（第三者が見るべき最初の資料）
+- [03_development_log.md](./docs/03_development_log.md) - 詳細な開発ログ
+- [01_original_idea.txt](./docs/01_original_idea.txt) - 最初のアイデア出し
+- [02_ios_safari_research_sources.txt](./docs/02_ios_safari_research_sources.txt) - iOS Safari調査資料
+
+## バージョン履歴
+
+- v0.17 (2026-01-30) - 音声ON/OFFボタンのデザイン改善
+- v0.16 (2026-01-30) - Canvas IndexSizeError修正、iPhone音声問題解決
+- v0.15 (2026-01-30) - Howler.Howler.ctx undefinedエラー修正
+- v0.10-v0.14 - 各種バグ修正と機能追加
+
+詳細は [DEVELOPMENT_LOG.md](./docs/03_development_log.md) を参照してください。
