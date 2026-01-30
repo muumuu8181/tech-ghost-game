@@ -406,6 +406,44 @@ function initUI() {
     closeDebug.addEventListener('click', () => {
         debugPanel.style.display = 'none';
     });
+
+    // 音声テストボタン
+    const testSoundMax = document.getElementById('testSoundMax');
+    const testSound50 = document.getElementById('testSound50');
+
+    testSoundMax.addEventListener('click', () => {
+        console.log('🔊 音量MAXでテスト再生');
+        if (!footstepSound) initSound();
+
+        // 強制再生
+        footstepSound.stop();
+        footstepSound.volume(1.0);
+        footstepSound.play();
+        footstepSound.playing = true;
+
+        setTimeout(() => {
+            console.log('⏸️ テスト終了');
+            footstepSound.stop();
+            footstepSound.playing = false;
+        }, 3000);
+    });
+
+    testSound50.addEventListener('click', () => {
+        console.log('🔉 音量50%でテスト再生');
+        if (!footstepSound) initSound();
+
+        // 強制再生
+        footstepSound.stop();
+        footstepSound.volume(0.5);
+        footstepSound.play();
+        footstepSound.playing = true;
+
+        setTimeout(() => {
+            console.log('⏸️ テスト終了');
+            footstepSound.stop();
+            footstepSound.playing = false;
+        }, 3000);
+    });
 }
 
 // ============== 初期化 ==============
