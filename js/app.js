@@ -1,5 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
+    // バージョン（更新するたびに0.01ずつ増やす）
+    version: 0.10,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -107,7 +109,7 @@ function drawRadar() {
     // 化け物の位置を描画
     if (state.distance !== null && state.bearing !== null) {
         const distanceRatio = Math.min(1, state.distance / CONFIG.maxHearingDistance);
-        const blobRadius = maxRadius * (1 - distanceRatio);
+        const blobRadius = Math.max(0, maxRadius * (1 - distanceRatio));
 
         if (blobRadius > 0) {
             // 化け物の点
@@ -325,6 +327,9 @@ function getCardinalDirection(bearing) {
 
 // ============== UI制御 ==============
 function initUI() {
+    // バージョン表示
+    document.getElementById('versionNumber').textContent = CONFIG.version.toFixed(2);
+
     // モード切り替え
     const mapBtn = document.getElementById('mapModeBtn');
     const radarBtn = document.getElementById('radarModeBtn');

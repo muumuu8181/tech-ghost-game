@@ -22,6 +22,7 @@ header {
     background: rgba(0, 20, 0, 0.9);
     padding: 10px 15px;
     border-bottom: 2px solid #0f0;
+    position: relative;
 }
 
 header h1 {
@@ -32,6 +33,15 @@ header h1 {
 #status {
     font-size: 12px;
     color: #0f0;
+}
+
+.version {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 14px;
+    color: #0f0;
+    opacity: 0.7;
 }
 
 .mode-selector {
