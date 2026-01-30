@@ -167,3 +167,65 @@ header h1 {
 .danger {
     animation: pulse 0.5s infinite;
 }
+
+/* デバッグパネル */
+.debug-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#debugToggle {
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.debug-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    max-height: 70%;
+    background: rgba(0, 20, 0, 0.95);
+    border: 2px solid #0f0;
+    border-radius: 10px;
+    padding: 15px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.debug-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #0f0;
+    text-align: center;
+}
+
+#debugLog {
+    font-family: monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #0f0;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.debug-panel button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    background: #001100;
+    border: 1px solid #0f0;
+    color: #0f0;
+    cursor: pointer;
+}

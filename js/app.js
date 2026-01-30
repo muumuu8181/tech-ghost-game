@@ -364,6 +364,48 @@ function initUI() {
             stopFootsteps();
         }
     });
+
+    // デバッグパネル
+    const debugToggle = document.getElementById('debugToggle');
+    const debugPanel = document.getElementById('debugPanel');
+    const closeDebug = document.getElementById('closeDebug');
+    const debugLog = document.getElementById('debugLog');
+
+    // console.logをキャプチャしてデバッグパネルに表示
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalWarn = console.warn;
+
+    function addDebugLog(message, type = 'log') {
+        const div = document.createElement('div');
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        div.style.color = type === 'error' ? '#f00' : type === 'warn' ? '#ff0' : '#0f0';
+        debugLog.appendChild(div);
+        debugLog.scrollTop = debugLog.scrollHeight;
+    }
+
+    console.log = function(...args) {
+        originalLog.apply(console, args);
+        addDebugLog(args.join(' '), 'log');
+    };
+
+    console.error = function(...args) {
+        originalError.apply(console, args);
+        addDebugLog(args.join(' '), 'error');
+    };
+
+    console.warn = function(...args) {
+        originalWarn.apply(console, args);
+        addDebugLog(args.join(' '), 'warn');
+    };
+
+    debugToggle.addEventListener('click', () => {
+        debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    closeDebug.addEventListener('click', () => {
+        debugPanel.style.display = 'none';
+    });
 }
 
 // ============== 初期化 ==============
