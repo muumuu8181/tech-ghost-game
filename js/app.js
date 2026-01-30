@@ -140,17 +140,27 @@ function initSound() {
         src: ['assets/sounds/footsteps.mp3'],
         loop: true,
         volume: 0,
-        html5: true
+        html5: false,
+        onload: function() {
+            console.log('✅ 音声ファイル読み込み成功');
+        },
+        onloaderror: function(id, error) {
+            console.error('❌ 音声ファイル読み込みエラー:', error);
+        }
     });
 
     footstepSound.playing = false;
+    console.log('🔊 音声システム初期化完了');
 }
 
 function playFootsteps(volume) {
+    console.log(`🎵 playFootsteps called: volume=${volume.toFixed(2)}`);
+
     if (volume <= 0.01) {
         if (footstepSound.playing) {
             footstepSound.stop();
             footstepSound.playing = false;
+            console.log('⏸️ 音声停止（音量0）');
         }
         return;
     }
@@ -158,10 +168,12 @@ function playFootsteps(volume) {
     if (!footstepSound.playing) {
         footstepSound.play();
         footstepSound.playing = true;
+        console.log('▶️ 音声再生開始');
     }
 
     // 音量を更新（0-1の範囲）
     footstepSound.volume(volume);
+    console.log(`🔊 音量設定: ${(volume * 100).toFixed(0)}%`);
 }
 
 function stopFootsteps() {
