@@ -1,7 +1,7 @@
 // ============== 設定 ==============
 const CONFIG = {
     // バージョン（更新するたびに0.01ずつ増やす）
-    version: 0.14,
+    version: 0.15,
     // 化け物の初期位置（ユーザーの現在地から約10m）
     monsterPosition: {
         lat: 35.7531,
@@ -107,8 +107,9 @@ function drawRadar() {
     ctx.fill();
 
     // 化け物の位置を描画
-    if (state.distance !== null && state.bearing !== null) {
-        const distanceRatio = Math.min(1, state.distance / CONFIG.maxHearingDistance);
+    if (state.distance !== null && state.bearing !== null && state.distance >= 0) {
+        // distanceRatioを0-1の範囲に確実に収める
+        const distanceRatio = Math.min(1, Math.max(0, state.distance / CONFIG.maxHearingDistance));
         const blobRadius = Math.max(0, maxRadius * (1 - distanceRatio));
 
         if (blobRadius > 0) {
@@ -148,7 +149,12 @@ function initSound() {
         onload: function() {
             console.log('✅ 音声ファイル読み込み成功');
             console.log('Howler state:', this.state());
-            console.log('AudioContext state:', Howler.Howler.ctx ? Howler.Howler.ctx.state : 'no context');
+            // 安全にAudioContext状態を取得
+            if (typeof Howler !== 'undefined' && Howler.Howler && Howler.Howler.ctx) {
+                console.log('AudioContext state:', Howler.Howler.ctx.state);
+            } else {
+                console.log('AudioContext: not initialized');
+            }
         },
         onloaderror: function(id, error) {
             console.error('❌ 音声ファイル読み込みエラー:', error);
@@ -452,7 +458,13 @@ function initUI() {
 
     testSoundMax.addEventListener('click', () => {
         console.log('🔊 音量MAXでテスト再生');
-        console.log('Howler.Howler.ctx exists:', !!Howler.Howler.ctx);
+        // 安全にAudioContext状態を確認
+        if (typeof Howler !== 'undefined' && Howler.Howler && Howler.Howler.ctx) {
+            console.log('Howler.Howler.ctx exists:', true);
+            console.log('AudioContext state:', Howler.Howler.ctx.state);
+        } else {
+            console.log('Howler.Howler.ctx exists:', false);
+        }
 
         if (!footstepSound) initSound();
 
@@ -481,7 +493,13 @@ function initUI() {
 
     testSound50.addEventListener('click', () => {
         console.log('🔉 音量50%でテスト再生');
-        console.log('Howler.Howler.ctx exists:', !!Howler.Howler.ctx);
+        // 安全にAudioContext状態を確認
+        if (typeof Howler !== 'undefined' && Howler.Howler && Howler.Howler.ctx) {
+            console.log('Howler.Howler.ctx exists:', true);
+            console.log('AudioContext state:', Howler.Howler.ctx.state);
+        } else {
+            console.log('Howler.Howler.ctx exists:', false);
+        }
 
         if (!footstepSound) initSound();
 
